@@ -1,1 +1,667 @@
-<h1>Hello World! The Venice site is working.</h1>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مفروشات فينيسيا | الفخامة والذوق الرفيع</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            light: '#F9F3DF',
+                            dark: '#AA8C2C',
+                        },
+                        burgundy: {
+                            DEFAULT: '#581825',
+                            dark: '#3D1019',
+                            light: '#7A2234'
+                        },
+                        cream: '#FDFBF7'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        .royal-title { font-family: 'Amiri', serif; }
+        .tab-btn.active { background-color: #581825; color: #D4AF37; border-color: #D4AF37; transform: scale(1.05); }
+
+        /* مۆشن وهزات تفاعلية مخصصة */
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-bounce-soft { animation: bounceSoft 0.4s ease-in-out; }
+
+        @keyframes cartPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.25); color: #D4AF37; }
+            100% { transform: scale(1); }
+        }
+        .animate-cart { animation: cartPulse 0.4s ease-in-out; }
+
+        /* تأثيرات ظهور ناعمة للعناصر */
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 selection:bg-gold selection:text-white">
+
+    <!-- نافذة تسجيل الدخول الرئيسية (مخفية افتراضياً الآن) -->
+    <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-burgundy/80 backdrop-blur-md px-4 hidden opacity-0 transition-all duration-500">
+        <div class="bg-white border-2 border-gold/40 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-center transform transition-all duration-500 scale-100">
+            
+            <!-- زر الإغلاق -->
+            <button type="button" onclick="closeLoginModal()" class="absolute top-4 left-4 text-gray-400 hover:text-red-600 font-bold text-lg transition transform hover:rotate-90 duration-300">✕</button>
+
+            <div class="mb-6 mt-2">
+                <span class="text-3xl font-black text-burgundy royal-title inline-block hover:scale-105 transition-transform duration-300">فينيسيا</span>
+                <h3 class="text-xl font-bold text-gray-800 mt-2">أهلاً بك في عالم الفخامة</h3>
+                <p class="text-xs text-gray-500 mt-1">يرجى إدخال بياناتك لإتمام الطلب بنجاح</p>
+            </div>
+
+            <form id="userLoginForm" onsubmit="handleManualLogin(event)" class="space-y-4 text-right">
+                <div>
+                    <label class="block text-xs font-bold text-burgundy mb-1">الاسم الكريم</label>
+                    <input type="text" id="userName" required placeholder="أدخل اسمك الكامل" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gold focus:outline-none text-sm bg-cream transition duration-300">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-burgundy mb-1">رقم الهاتف</label>
+                    <input type="tel" id="userPhone" required maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="07xxxxxxxx" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gold focus:outline-none text-sm bg-cream transition duration-300">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-burgundy mb-1">البريد الإلكتروني</label>
+                    <input type="email" id="userEmail" required placeholder="name@example.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gold focus:outline-none text-sm bg-cream transition duration-300">
+                </div>
+                <button type="submit" class="w-full bg-burgundy hover:bg-burgundy-dark text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-gold/20 hover:scale-[1.02] active:scale-95 border border-gold/30 mt-2">
+                    حفظ البيانات والمتابعة
+                </button>
+            </form>
+
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-gray-200"></div>
+                    <span class="flex-shrink mx-4 text-gray-400 text-xs">أو المصادقة السريعة</span>
+                    <div class="flex-grow border-t border-gray-200"></div>
+                </div>
+                <button type="button" onclick="openGoogleAuthModal()" class="w-full bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl transition-all duration-300 border border-gray-300 flex items-center justify-center gap-3 text-sm shadow-sm hover:scale-[1.02] active:scale-95">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.19v3.15C3.17 21.3 7.22 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27H1.19C.43 8.12 0 9.87 0 12s.43 3.88 1.19 5.42l4.09-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.17 2.7 1.19 6.58l4.09 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+                    <span>تسجيل الدخول باستخدام Google</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إيميل وكلمة مرور جوجل الوهمية -->
+    <div id="googleAuthPopup" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center relative border border-gray-200 transform transition-all duration-300 scale-95">
+            <h3 class="text-xl font-bold text-gray-800 mb-1">تسجيل Google</h3>
+            <p class="text-xs text-gray-500 mb-6">المتابعة إلى معرض فينيسيا</p>
+            <form onsubmit="handleGoogleAuthSubmit(event)" class="space-y-4 text-right">
+                <input type="email" id="gEmail" required placeholder="البريد الإلكتروني (Gmail)" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none text-sm transition">
+                <input type="password" id="gPassword" required placeholder="كلمة المرور" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none text-sm transition">
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeGoogleAuthModal()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-lg text-sm transition">إلغاء</button>
+                    <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm shadow transition">متابعة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة عربة التسوق الملكية المنبثقة -->
+    <div id="cartModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 hidden transition-all">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl relative text-right border border-gold/35 transform transition-transform duration-300 scale-100">
+            <div class="flex justify-between items-center pb-4 border-b border-gray-200">
+                <h3 class="text-xl font-bold text-burgundy royal-title">🛍️ عربة التسوق الملكية</h3>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-red-600 font-bold text-lg transition transform hover:rotate-90 duration-300">✕</button>
+            </div>
+            <div id="cartItemsContainer" class="py-4 max-h-64 overflow-y-auto space-y-3">
+                <p class="text-gray-500 text-center text-sm py-6">عربة التسوق فارغة حالياً.</p>
+            </div>
+            <div class="pt-4 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-bold text-gray-700 text-sm">إجمالي المنتجات:</span>
+                    <span id="cartCountTotal" class="font-bold text-burgundy transition-all duration-300">0</span>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="toggleCart()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl text-sm transition duration-300">متابعة التصفح</button>
+                    <button onclick="checkoutWhatsApp()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-lg hover:scale-[1.02] transition duration-300 flex items-center justify-center gap-2">إرسال الطلب للواتساب</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نظام التنبيهات العائمة السريعة (Toast Notification) -->
+    <div id="toastNotification" class="fixed bottom-6 left-6 z-50 bg-burgundy text-gold border border-gold/40 px-6 py-3.5 rounded-2xl shadow-2xl transform translate-y-32 opacity-0 transition-all duration-500 flex items-center gap-3">
+        <span class="text-xl animate-bounce">✨</span>
+        <span id="toastMessage" class="text-sm font-bold text-white">تمت الإضافة بنجاح</span>
+    </div>
+
+    <!-- محتوى الموقع الأساسي (مرئي بشكل افتراضي الآن) -->
+    <div id="mainWebsite" class="">
+        <div class="bg-burgundy text-gold-light text-xs text-center py-2.5 px-4 border-b border-gold/30">
+            ✨ فينيسيا لعشاق الفخامة والذوق الرفيع - أحدث تقنية عالمية في صناعة الفرشات والوسادات الطبية ✨
+        </div>
+
+        <header class="sticky top-0 z-40 bg-cream/95 backdrop-blur-md border-b border-gold/20 shadow-sm transition-all duration-300">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-black tracking-widest text-burgundy royal-title cursor-pointer hover:text-gold-dark transition duration-300">فينيسيا</span>
+                    <span class="text-[10px] border border-gold text-gold-dark px-2 py-0.5 rounded-full font-bold uppercase tracking-wider animate-pulse">Luxury</span>
+                </div>
+                <nav class="hidden md:flex space-x-8 space-x-reverse text-sm font-semibold text-gray-700">
+                    <a href="#" class="text-burgundy hover:text-gold-dark transition">الرئيسية</a>
+                    <a href="#products-section" class="hover:text-gold-dark transition">المنتجات والوسادات</a>
+                    <a href="#contact" class="hover:text-gold-dark transition">تواصل معنا</a>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <!-- أزرار تسجيل الدخول والمستخدم المحدثة -->
+                    <button id="loginBtnHeader" onclick="openLoginModal()" class="text-xs font-bold text-burgundy bg-gold/10 px-3 py-1.5 rounded-xl border border-gold/30 hover:bg-gold/20 transition shadow-sm">تسجيل الدخول</button>
+                    <span id="welcomeUser" class="text-xs font-bold text-burgundy hidden sm:inline bg-gold/10 px-3 py-1.5 rounded-xl border border-gold/30"></span>
+                    
+                    <button id="cartBtn" onclick="toggleCart()" class="relative bg-gold/10 hover:bg-gold/20 border border-gold/40 text-burgundy p-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 text-xs font-bold shadow-sm hover:scale-105 active:scale-95">
+                        <span class="text-lg">🛒</span>
+                        <span class="hidden sm:inline">العربة</span>
+                        <span id="cartBadge" class="absolute -top-2 -right-2 bg-burgundy text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold transition-transform">0</span>
+                    </button>
+                    <button id="logoutBtn" onclick="logout()" class="text-xs text-red-600 hover:text-red-800 font-bold px-1 transition hidden">خروج</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- واجهة ترحيبية -->
+        <section class="relative bg-gradient-to-b from-burgundy/5 via-cream to-cream py-24 text-center overflow-hidden">
+            <div class="container mx-auto px-6 max-w-4xl relative z-10 fade-in-up">
+                <h2 class="text-4xl md:text-7xl font-black text-burgundy mb-6 leading-tight royal-title">
+                    معرض <span class="text-gold-dark">فينيسيا</span> للفخامة <br>
+                    <span class="text-3xl md:text-5xl font-semibold text-gray-700 mt-2 block">والذوق الرفيع</span>
+                </h2>
+                <p class="text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto font-medium">
+                    نقدم لك أنظمة نوم متطورة تجمع بين الراحة الطبية المطلقة وتصميمات "بوكت كويل" المغلف الفاخر لتستمتع بالنوم الملكي.
+                </p>
+                <a href="#products-section" class="inline-block bg-burgundy hover:bg-burgundy-dark text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-gold/20 hover:scale-105 active:scale-95 border border-gold/40">تصفح المعرض الكامل</a>
+            </div>
+        </section>
+
+        <!-- قسم المنتجات -->
+        <section id="products-section" class="py-20 container mx-auto px-6">
+            <div class="text-center mb-10">
+                <span class="text-gold-dark text-xs font-bold uppercase tracking-widest bg-gold/10 px-3 py-1 rounded-md">كتالوج المنتجات</span>
+                <h3 class="text-3xl md:text-4xl font-bold text-burgundy mt-3 royal-title">تشكيلة الفرشات والوسادات الملكية</h3>
+                <div class="w-24 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- أزرار التصفية الفورية -->
+            <div class="flex justify-center gap-3 mb-12 flex-wrap">
+                <button onclick="filterProducts('all')" id="tab-all" class="tab-btn active px-6 py-2.5 rounded-full border border-gray-300 text-sm font-bold transition-all duration-300 shadow-sm">جميع المنتجات</button>
+                <button onclick="filterProducts('mattress')" id="tab-mattress" class="tab-btn px-6 py-2.5 rounded-full border border-gray-300 text-sm font-bold transition-all duration-300 shadow-sm">الفرشات الطبية</button>
+                <button onclick="filterProducts('pillow')" id="tab-pillow" class="tab-btn px-6 py-2.5 rounded-full border border-gray-300 text-sm font-bold transition-all duration-300 shadow-sm">الوسادات الفاخرة</button>
+            </div>
+
+            <!-- شبكة عرض المنتجات -->
+            <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Super preme -->
+                <div class="product-card transition-all duration-500" data-category="mattress">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">فرشة طبية</span>
+                                <img src="images/super-preme.jpg" alt="Super Preme" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=600&q=80'">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">Super preme</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">أكثر من 1000 زنبرك بوكت كويل الطبي المغلف بمواصفات عالمية وإسفنج ضغط عالي.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('فرشة Super preme')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('فرشة Super preme'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Luxury -->
+                <div class="product-card transition-all duration-500" data-category="mattress">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">فرشة طبية</span>
+                                <img src="images/luxury.jpg" alt="Luxury" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80'">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">Luxury</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">تحتوي على زنبرك بوكت كويل مع طبقة من اسفنج دانلوب طبيعي الفاخر لأعلى درجات الاسترخاء.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('فرشة Luxury')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('فرشة Luxury'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Relax -->
+                <div class="product-card transition-all duration-500" data-category="mattress">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">فرشة طبية</span>
+                                <img src="images/relax.jpg" alt="Relax" class="w-full h-full object-cover group-hover:scale-110 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=600&q=80'">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">Relax</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">زنبرك بوكت كويل مع طبقات إسفنج ضغط عالي متعددة الارتفاعات لنوم هادئ وخالٍ من الإرهاق.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('فرشة Relax')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('فرشة Relax'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- وسادة ميموري فوم -->
+                <div class="product-card transition-all duration-500" data-category="pillow">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">وسادة فندقية</span>
+                                <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=600&q=80" alt="Memory Foam" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">وسادة ميموري فوم</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">تتطابق بدقة مع شكل الرأس والرقبة لتخفيف الضغط وتوفير دعم كامل لفقرات الرقبة.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('وسادة ميموري فوم')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('وسادة ميموري فوم'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- وسادة الريش الملكي -->
+                <div class="product-card transition-all duration-500" data-category="pillow">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">وسادة فندقية</span>
+                                <img src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=600&q=80" alt="Royal Feather" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">وسادة الريش الملكي</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">مصنوعة بمعايير الفنادق العالمية خمس نجوم لتمنحك شعوراً فائق النعومة.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('وسادة الريش الملكي')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('وسادة الريش الملكي'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- وسادة الألياف الدقيقة -->
+                <div class="product-card transition-all duration-500" data-category="pillow">
+                    <div class="bg-white border border-gold/20 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 flex flex-col justify-between h-full group hover:-translate-y-2">
+                        <div>
+                            <div class="h-64 bg-gray-100 overflow-hidden relative">
+                                <span class="absolute top-4 right-4 z-10 bg-gold text-white text-xs px-3 py-1 rounded-full font-bold shadow">وسادة فندقية</span>
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiUEmFoaIjZ1G30ImJxAIIGZQMKuLaCigzxQIF8s4_Bg&s=10" alt="Microfiber" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-2xl font-bold tracking-wide text-burgundy mb-2 royal-title">وسادة الألياف الدقيقة</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">حشوة متطورة تسمح بتدوير الهواء لتحافظ على برودة الوسادة وراحتك طوال الليل.</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="pt-4 border-t border-gray-100 flex gap-2">
+                                <button onclick="addToCart('وسادة الألياف الدقيقة')" class="w-1/2 bg-burgundy hover:bg-burgundy-dark text-white px-3 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow active:scale-95">أضف للعربة 🛒</button>
+                                <button onclick="addToCart('وسادة الألياف الدقيقة'); toggleCart();" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition duration-300 text-center shadow active:scale-95">شراء الآن</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- تذييل الصفحة (Footer) -->
+        <footer id="contact" class="bg-burgundy-dark text-white py-16 border-t-4 border-gold">
+            <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div>
+                    <h3 class="text-3xl font-bold text-gold tracking-wider mb-4 royal-title">فينيسيا</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">وجهتك الأولى للمفروشات والفرشات الطبية الفاخرة.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gold">روابط سريعة</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-gold transition">الرئيسية</a></li>
+                        <li><a href="#products-section" class="hover:text-gold transition">المنتجات</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gold">تواصل معنا وعبر المنصات</h4>
+                    <div class="space-y-3">
+                        <a href="https://wa.me/962770741142" target="_blank" class="flex items-center gap-2 text-gold font-bold text-base hover:underline transition">
+                            💬 واتساب: 0770741142
+                        </a>
+                        <a href="https://www.instagram.com/venecia__mattress?igsh=YzRuMjY3MGpua3Q3" target="_blank" class="inline-flex items-center gap-2.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white px-4 py-2.5 rounded-xl font-bold text-sm shadow-lg hover:scale-105 transition duration-300">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                            <span>تابعنا على إنستغرام</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto px-6 pt-10 mt-10 border-t border-white/10 text-center text-gray-400 text-xs">
+                جميع الحقوق محفوظة ©️ 2026 معرض فينيسيا للمفروشات والفرشات الطبية.
+            </div>
+        </footer>
+    </div>
+
+    <!-- كود الوظائف والموشن المتقدم -->
+    <script>
+        let cart = [];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateHeaderUI();
+
+            const savedCart = localStorage.getItem('venice_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartUI();
+            }
+        });
+
+        function updateHeaderUI() {
+            const savedUser = localStorage.getItem('venice_user');
+            const welcomeEl = document.getElementById('welcomeUser');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginBtnHeader = document.getElementById('loginBtnHeader');
+
+            if (savedUser) {
+                const userData = JSON.parse(savedUser);
+                welcomeEl.innerText = `أهلاً بك، ${userData.name}`;
+                welcomeEl.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+                if (loginBtnHeader) loginBtnHeader.classList.add('hidden');
+            } else {
+                welcomeEl.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+                if (loginBtnHeader) loginBtnHeader.classList.remove('hidden');
+            }
+        }
+
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.style.opacity = '1';
+            }, 10);
+        }
+
+        function closeLoginModal() {
+            const modal = document.getElementById('loginModal');
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function handleManualLogin(event) {
+            event.preventDefault();
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+            const emailInput = document.getElementById('userEmail');
+            const email = emailInput.value;
+
+            // Email Domain Validation (Gmail, Outlook, Yahoo, iCloud)
+            const emailRegex = /@(gmail\.com|outlook\.com|yahoo\.com|icloud\.com)$/i;
+            
+            if (!emailRegex.test(email.trim())) {
+                showToast('عذراً، نقبل فقط حسابات Gmail, Outlook, Yahoo, iCloud');
+                emailInput.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+                emailInput.focus();
+                return;
+            }
+            
+            emailInput.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+
+            localStorage.setItem('venice_user', JSON.stringify({ name, phone, email }));
+            
+            closeLoginModal();
+            updateHeaderUI();
+            showToast(`تم حفظ البيانات بنجاح، يمكنك الآن إتمام الطلب`);
+            
+            // Reopen cart to let them finish the checkout
+            if (cart.length > 0) {
+                setTimeout(() => {
+                    const cartModal = document.getElementById('cartModal');
+                    if (cartModal.classList.contains('hidden')) {
+                        toggleCart();
+                    }
+                }, 500);
+            }
+        }
+
+        function openGoogleAuthModal() { 
+            const popup = document.getElementById('googleAuthPopup');
+            popup.classList.remove('hidden');
+            setTimeout(() => popup.querySelector('div').classList.remove('scale-95'), 10);
+        }
+        function closeGoogleAuthModal() { 
+            const popup = document.getElementById('googleAuthPopup');
+            popup.classList.add('hidden');
+        }
+        
+        function handleGoogleAuthSubmit(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('gEmail');
+            const email = emailInput.value;
+
+            // Email Domain Validation (Gmail Only for this popup)
+            const emailRegex = /@gmail\.com$/i;
+            
+            if (!emailRegex.test(email.trim())) {
+                showToast('عذراً، يرجى إدخال بريد Gmail صالح هنا.');
+                emailInput.classList.add('border-red-500');
+                emailInput.focus();
+                return;
+            }
+
+            emailInput.classList.remove('border-red-500');
+
+            const name = email.split('@')[0];
+            localStorage.setItem('venice_user', JSON.stringify({ name, phone: 'غير محدد', email }));
+            closeGoogleAuthModal();
+            
+            closeLoginModal();
+            updateHeaderUI();
+            showToast(`تم التسجيل بنجاح، يرجى إتمام طلبك`);
+
+            if (cart.length > 0) {
+                setTimeout(() => {
+                    const cartModal = document.getElementById('cartModal');
+                    if (cartModal.classList.contains('hidden')) {
+                        toggleCart();
+                    }
+                }, 500);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('venice_user');
+            location.reload();
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${category}`).classList.add('active');
+
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }, 200);
+            });
+        }
+
+        function toggleCart() {
+            const cartModal = document.getElementById('cartModal');
+            cartModal.classList.toggle('hidden');
+        }
+
+        function addToCart(productName) {
+            cart.push(productName);
+            localStorage.setItem('venice_cart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`تمت إضافة (${productName}) للعربة بنجاح 🛒`);
+
+            const cartBtn = document.getElementById('cartBtn');
+            const cartBadge = document.getElementById('cartBadge');
+            cartBtn.classList.add('animate-bounce-soft');
+            cartBadge.classList.add('animate-cart');
+            
+            setTimeout(() => {
+                cartBtn.classList.remove('animate-bounce-soft');
+                cartBadge.classList.remove('animate-cart');
+            }, 400);
+        }
+
+        function removeFromCart(index) {
+            const removedItem = cart[index];
+            cart.splice(index, 1);
+            localStorage.setItem('venice_cart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`تم حذف (${removedItem}) من العربة`);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItemsContainer');
+            const badge = document.getElementById('cartBadge');
+            const totalCount = document.getElementById('cartCountTotal');
+
+            badge.innerText = cart.length;
+            totalCount.innerText = cart.length;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-center text-sm py-6">عربة التسوق فارغة حالياً.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            cart.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-cream p-3 rounded-xl border border-gold/20 transition-all duration-300 hover:scale-[1.01]">
+                        <span class="text-sm font-bold text-burgundy">${item}</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 text-xs font-bold px-2.5 py-1 bg-white rounded-lg shadow-sm transition hover:bg-red-50">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.innerText = message;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) {
+                showToast('عربة التسوق فارغة تماماً!');
+                return;
+            }
+
+            // Check if user is logged in
+            const savedUser = localStorage.getItem('venice_user');
+            
+            if (!savedUser) {
+                // If not logged in, close cart and show login screen
+                toggleCart();
+                openLoginModal();
+                showToast('يرجى إدخال بياناتك لإتمام الطلب');
+                return;
+            }
+
+            const userData = JSON.parse(savedUser);
+            
+            let message = `مرحباً معرض فينيسيا الملكي، أود تأكيد الطلب التالي:\n\n`;
+            message += `👤 اسم العميل: ${userData.name}\n`;
+            message += `📞 رقم الهاتف: ${userData.phone}\n\n`;
+            message += `📦 تفاصيل المنتجات المطلوبة:\n`;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item}\n`;
+            });
+
+            message += `\nيرجى التواصل معي لتأكيد التوصيل والدفع. شكراً لكم.`;
+
+            const whatsappUrl = `https://wa.me/962770741142?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Disable right-click menu
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+        document.onkeydown = function (e) {
+            // Block F12
+            if (e.keyCode == 123) {
+                return false;
+            }
+            // Block Ctrl+Shift+I (Inspect)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            // Block Ctrl+Shift+C (Inspect Element)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            // Block Ctrl+Shift+J (Console)
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            // Block Ctrl+U (View Source)
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+        };
+    </script>
+</body>
+</html>
