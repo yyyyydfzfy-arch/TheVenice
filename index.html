@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مفروشات فينيسيا | الفخامة والذوق الرفيع</title>
+    
+    <!-- Meta Tags للمشاركة على واتساب ومواقع التواصل -->
+    <meta property="og:title" content="مفروشات فينيسيا | الفخامة والذوق الرفيع">
+    <meta property="og:description" content="وجهتك الأولى للفرشات الطبية وأنظمة النوم الفاخرة. استمتع بالنوم الملكي.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:type" content="website">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,20 +56,19 @@
 
         /* تأثيرات ظهور ناعمة للعناصر */
         .fade-in-up {
-            animation: fadeInUp 0.5s ease-out forwards;
+            animation: fadeInUp 0.8s ease-out forwards;
         }
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body class="bg-cream text-gray-800 selection:bg-gold selection:text-white">
 
-    <!-- نافذة تسجيل الدخول الرئيسية (مخفية افتراضياً الآن) -->
+    <!-- نافذة تسجيل الدخول الرئيسية -->
     <div id="loginModal" class="fixed inset-0 z-50 flex items-center justify-center bg-burgundy/80 backdrop-blur-md px-4 hidden opacity-0 transition-all duration-500">
         <div class="bg-white border-2 border-gold/40 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-center transform transition-all duration-500 scale-100">
-            
             <!-- زر الإغلاق -->
             <button type="button" onclick="closeLoginModal()" class="absolute top-4 left-4 text-gray-400 hover:text-red-600 font-bold text-lg transition transform hover:rotate-90 duration-300">✕</button>
 
@@ -149,7 +155,7 @@
         <span id="toastMessage" class="text-sm font-bold text-white">تمت الإضافة بنجاح</span>
     </div>
 
-    <!-- محتوى الموقع الأساسي (مرئي بشكل افتراضي الآن) -->
+    <!-- محتوى الموقع الأساسي -->
     <div id="mainWebsite" class="">
         <div class="bg-burgundy text-gold-light text-xs text-center py-2.5 px-4 border-b border-gold/30">
             ✨ فينيسيا لعشاق الفخامة والذوق الرفيع - أحدث تقنية عالمية في صناعة الفرشات والوسادات الطبية ✨
@@ -167,7 +173,6 @@
                     <a href="#contact" class="hover:text-gold-dark transition">تواصل معنا</a>
                 </nav>
                 <div class="flex items-center gap-3">
-                    <!-- أزرار تسجيل الدخول والمستخدم المحدثة -->
                     <button id="loginBtnHeader" onclick="openLoginModal()" class="text-xs font-bold text-burgundy bg-gold/10 px-3 py-1.5 rounded-xl border border-gold/30 hover:bg-gold/20 transition shadow-sm">تسجيل الدخول</button>
                     <span id="welcomeUser" class="text-xs font-bold text-burgundy hidden sm:inline bg-gold/10 px-3 py-1.5 rounded-xl border border-gold/30"></span>
                     
@@ -181,17 +186,43 @@
             </div>
         </header>
 
-        <!-- واجهة ترحيبية -->
-        <section class="relative bg-gradient-to-b from-burgundy/5 via-cream to-cream py-24 text-center overflow-hidden">
+        <!-- واجهة ترحيبية محسنة بصورة خلفية احترافية -->
+        <section class="relative bg-cover bg-center bg-no-repeat py-32 text-center overflow-hidden" style="background-image: url('https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1920&q=80');">
+            <!-- طبقة شفافة داكنة (Overlay) لإبراز النص -->
+            <div class="absolute inset-0 bg-black/65 backdrop-blur-[2px]"></div>
+            
             <div class="container mx-auto px-6 max-w-4xl relative z-10 fade-in-up">
-                <h2 class="text-4xl md:text-7xl font-black text-burgundy mb-6 leading-tight royal-title">
-                    معرض <span class="text-gold-dark">فينيسيا</span> للفخامة <br>
-                    <span class="text-3xl md:text-5xl font-semibold text-gray-700 mt-2 block">والذوق الرفيع</span>
+                <h2 class="text-4xl md:text-7xl font-black text-white mb-6 leading-tight royal-title drop-shadow-lg">
+                    معرض <span class="text-gold">فينيسيا</span> للفخامة <br>
+                    <span class="text-3xl md:text-5xl font-semibold text-gray-200 mt-2 block">والذوق الرفيع</span>
                 </h2>
-                <p class="text-lg text-gray-600 mb-10 leading-relaxed max-w-2xl mx-auto font-medium">
+                <p class="text-lg text-gray-300 mb-10 leading-relaxed max-w-2xl mx-auto font-medium drop-shadow-md">
                     نقدم لك أنظمة نوم متطورة تجمع بين الراحة الطبية المطلقة وتصميمات "بوكت كويل" المغلف الفاخر لتستمتع بالنوم الملكي.
                 </p>
-                <a href="#products-section" class="inline-block bg-burgundy hover:bg-burgundy-dark text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-gold/20 hover:scale-105 active:scale-95 border border-gold/40">تصفح المعرض الكامل</a>
+                <a href="#products-section" class="inline-block bg-gold hover:bg-gold-dark text-burgundy-dark font-black px-10 py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-105 active:scale-95">تصفح المعرض الكامل</a>
+            </div>
+        </section>
+
+        <!-- قسم لماذا نحن؟ (عناصر الثقة - Trust Signals) -->
+        <section class="py-10 bg-white border-b border-gray-100 shadow-lg relative z-20 -mt-10 mx-4 md:mx-auto max-w-5xl rounded-2xl">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x md:divide-x-reverse divide-gray-100">
+                    <div class="p-4 hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4 drop-shadow-sm">🛡️</div>
+                        <h4 class="font-bold text-burgundy mb-2 text-lg">ضمان ذهبي 10 سنوات</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">نضمن لك جودة التصنيع وعمر افتراضي طويل لجميع فرشاتنا.</p>
+                    </div>
+                    <div class="p-4 hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4 drop-shadow-sm">🚚</div>
+                        <h4 class="font-bold text-burgundy mb-2 text-lg">توصيل مجاني وسريع</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">توصيل لباب بيتك بأسرع وقت مع فريق تركيب مختص.</p>
+                    </div>
+                    <div class="p-4 hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4 drop-shadow-sm">🩺</div>
+                        <h4 class="font-bold text-burgundy mb-2 text-lg">اعتماد طبي</h4>
+                        <p class="text-sm text-gray-500 leading-relaxed">تصاميم مدروسة طبياً لدعم العمود الفقري وتخفيف الضغط.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -348,6 +379,37 @@
             </div>
         </section>
 
+        <!-- قسم آراء العملاء -->
+        <section class="py-20 bg-cream border-t border-gray-100">
+            <div class="container mx-auto px-6 max-w-6xl">
+                <div class="text-center mb-12">
+                    <span class="text-gold-dark text-xs font-bold uppercase tracking-widest bg-gold/10 px-3 py-1 rounded-md">ثقة عملائنا</span>
+                    <h3 class="text-3xl font-bold text-burgundy mt-3 royal-title">ماذا يقولون عن فينيسيا؟</h3>
+                    <div class="w-16 h-1 bg-gold mx-auto mt-4 rounded-full"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gold/10 hover:shadow-lg transition duration-300 relative group">
+                        <div class="absolute top-0 right-8 -mt-4 text-4xl opacity-20 group-hover:text-gold transition duration-300">"</div>
+                        <div class="text-gold mb-4 text-lg">⭐⭐⭐⭐⭐</div>
+                        <p class="text-gray-600 text-sm italic mb-6 leading-relaxed relative z-10">"تجربة نوم مختلفة تماماً! فرشة Luxury غيرت حياتي وخلصتني من آلام الظهر المزعجة. خدمة التوصيل كانت سريعة جداً."</p>
+                        <h5 class="text-burgundy font-bold text-sm">- أحمد م.</h5>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gold/10 hover:shadow-lg transition duration-300 relative group">
+                        <div class="absolute top-0 right-8 -mt-4 text-4xl opacity-20 group-hover:text-gold transition duration-300">"</div>
+                        <div class="text-gold mb-4 text-lg">⭐⭐⭐⭐⭐</div>
+                        <p class="text-gray-600 text-sm italic mb-6 leading-relaxed relative z-10">"الوسائد الفندقية خرافية بمعنى الكلمة، نفس إحساس فنادق الخمس نجوم. شكراً لمفروشات فينيسيا على هذه الجودة والاهتمام بالتفاصيل."</p>
+                        <h5 class="text-burgundy font-bold text-sm">- سارة ع.</h5>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gold/10 hover:shadow-lg transition duration-300 relative group">
+                        <div class="absolute top-0 right-8 -mt-4 text-4xl opacity-20 group-hover:text-gold transition duration-300">"</div>
+                        <div class="text-gold mb-4 text-lg">⭐⭐⭐⭐⭐</div>
+                        <p class="text-gray-600 text-sm italic mb-6 leading-relaxed relative z-10">"تعامل راقي ومصداقية عالية. ضمان 10 سنوات أعطاني ثقة كبيرة في الشراء، والمنتج مطابق تماماً للمواصفات المذكورة."</p>
+                        <h5 class="text-burgundy font-bold text-sm">- خالد ت.</h5>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- تذييل الصفحة (Footer) -->
         <footer id="contact" class="bg-burgundy-dark text-white py-16 border-t-4 border-gold">
             <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -375,8 +437,18 @@
                     </div>
                 </div>
             </div>
-            <div class="container mx-auto px-6 pt-10 mt-10 border-t border-white/10 text-center text-gray-400 text-xs">
-                جميع الحقوق محفوظة ©️ 2026 معرض فينيسيا للمفروشات والفرشات الطبية.
+            
+            <div class="container mx-auto px-6 mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-gray-400 text-xs">
+                    جميع الحقوق محفوظة ©️ 2026 معرض فينيسيا للمفروشات والفرشات الطبية.
+                </div>
+                <!-- أيقونات الدفع -->
+                <div class="flex gap-2 items-center">
+                    <span class="text-xs text-gray-300 font-bold ml-2">طرق الدفع المتاحة:</span>
+                    <span class="bg-white px-3 py-1.5 rounded text-[10px] font-bold text-gray-800 shadow" title="الدفع عند الاستلام">💵 الدفع عند الاستلام</span>
+                    <span class="bg-blue-800 px-3 py-1.5 rounded text-[10px] font-bold text-white tracking-wider shadow" title="فيزا / ماستركارد">VISA</span>
+                    <span class="bg-purple-700 px-3 py-1.5 rounded text-[10px] font-bold text-white tracking-wider shadow" title="CliQ">CliQ</span>
+                </div>
             </div>
         </footer>
     </div>
@@ -608,11 +680,9 @@
                 return;
             }
 
-            // Check if user is logged in
             const savedUser = localStorage.getItem('venice_user');
             
             if (!savedUser) {
-                // If not logged in, close cart and show login screen
                 toggleCart();
                 openLoginModal();
                 showToast('يرجى إدخال بياناتك لإتمام الطلب');
@@ -635,33 +705,6 @@
             const whatsappUrl = `https://wa.me/962770741142?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
-
-        // Disable right-click menu
-        document.addEventListener('contextmenu', event => event.preventDefault());
-
-        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-        document.onkeydown = function (e) {
-            // Block F12
-            if (e.keyCode == 123) {
-                return false;
-            }
-            // Block Ctrl+Shift+I (Inspect)
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
-                return false;
-            }
-            // Block Ctrl+Shift+C (Inspect Element)
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
-                return false;
-            }
-            // Block Ctrl+Shift+J (Console)
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
-                return false;
-            }
-            // Block Ctrl+U (View Source)
-            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-                return false;
-            }
-        };
     </script>
 </body>
 </html>
