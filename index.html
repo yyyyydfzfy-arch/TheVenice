@@ -141,9 +141,10 @@
                     <span class="font-bold text-gray-700 text-sm">إجمالي المنتجات:</span>
                     <span id="cartCountTotal" class="font-bold text-burgundy transition-all duration-300">0</span>
                 </div>
-                <div class="flex gap-3">
-                    <button onclick="toggleCart()" class="w-1/2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-xl text-sm transition duration-300">متابعة التصفح</button>
-                    <button onclick="checkoutWhatsApp()" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-lg hover:scale-[1.02] transition duration-300 flex items-center justify-center gap-2">إرسال الطلب للواتساب</button>
+                <!-- التغيير هنا: أزرار الدفع والواتساب -->
+                <div class="flex gap-2">
+                    <button onclick="checkoutWhatsApp()" class="w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow-lg transition duration-300">واتساب</button>
+                    <button onclick="submitOrderToDatabase()" id="submitOrderBtn" class="w-2/3 bg-burgundy hover:bg-burgundy-dark text-white font-bold py-3 rounded-xl text-xs shadow-lg transition duration-300">تأكيد وإرسال الطلب للموقع</button>
                 </div>
             </div>
         </div>
@@ -704,6 +705,73 @@
 
             const whatsappUrl = `https://wa.me/962770741142?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
+        }
+
+        // --- التغيير الجديد: دالة إرسال الطلب إلى قاعدة البيانات (Formspree) ---
+        async function submitOrderToDatabase() {
+            if (cart.length === 0) {
+                showToast('عربة التسوق فارغة تماماً!');
+                return;
+            }
+
+            const savedUser = localStorage.getItem('venice_user');
+            
+            if (!savedUser) {
+                toggleCart();
+                openLoginModal();
+                showToast('يرجى تسجيل الدخول لإتمام الطلب');
+                return;
+            }
+
+            const userData = JSON.parse(savedUser);
+            const btn = document.getElementById('submitOrderBtn');
+            const originalText = btn.innerText;
+            
+            // تغيير شكل الزر أثناء الإرسال
+            btn.innerText = "جاري الإرسال...";
+            btn.disabled = true;
+            btn.classList.add('opacity-70');
+
+            // تجميع البيانات
+            const orderData = {
+                name: userData.name,
+                phone: userData.phone,
+                email: userData.email,
+                products: cart.join(' | '), // تحويل المنتجات لنص
+                total_items: cart.length
+            };
+
+            try {
+                // هام: ضع الرابط الخاص بك من Formspree هنا
+                const formspreeURL = "https://formspree.io/f/ضع_معرف_الفورم_هنا"; 
+
+                const response = await fetch(formspreeURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    showToast('تم استلام طلبك بنجاح! سنتواصل معك قريباً.');
+                    // تفريغ السلة بعد نجاح الطلب
+                    cart = [];
+                    localStorage.removeItem('venice_cart');
+                    updateCartUI();
+                    setTimeout(() => { toggleCart(); }, 2000);
+                } else {
+                    showToast('حدث خطأ أثناء الإرسال، يرجى المحاولة لاحقاً أو الطلب عبر الواتساب.');
+                }
+            } catch (error) {
+                showToast('خطأ في الاتصال، تأكد من الإنترنت أو اطلب عبر الواتساب.');
+            } finally {
+                // إعادة الزر لشكله الطبيعي
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70');
+            }
         }
     </script>
 </body>
