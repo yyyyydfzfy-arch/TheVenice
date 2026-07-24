@@ -442,14 +442,23 @@
                 <div class="text-gray-400 text-xs">
                     جميع الحقوق محفوظة ©️ 2026 معرض فينيسيا للمفروشات والفرشات الطبية.
                 </div>
-                <!-- أيقونات الدفع المُحدثة لتكون روابط قابلة للنقر -->
-                <div class="flex gap-2 items-center">
+                <!-- أيقونات وأزرار الدفع التفاعلية -->
+                <div class="flex gap-2 items-center flex-wrap mt-4 md:mt-0">
                     <span class="text-xs text-gray-300 font-bold ml-2">طرق الدفع المتاحة:</span>
-                    <span class="bg-white px-3 py-1.5 rounded text-[10px] font-bold text-gray-800 shadow" title="الدفع عند الاستلام">💵 الدفع عند الاستلام</span>
                     
-                    <a href="https://wa.me/962770741142?text=مرحباً، أود الاستفسار عن الدفع عبر بطاقة فيزا (VISA)" target="_blank" class="bg-blue-800 hover:bg-blue-600 px-3 py-1.5 rounded text-[10px] font-bold text-white tracking-wider shadow hover:-translate-y-1 transition duration-300 cursor-pointer" title="فيزا / ماستركارد">VISA</a>
+                    <span class="bg-white px-3 py-2 rounded-lg text-xs font-bold text-gray-800 shadow-md flex items-center gap-1 cursor-default">
+                        💵 عند الاستلام
+                    </span>
                     
-                    <a href="https://wa.me/962770741142?text=مرحباً، أود الاستفسار عن الدفع عبر محفظة كليك (CliQ)" target="_blank" class="bg-purple-700 hover:bg-purple-500 px-3 py-1.5 rounded text-[10px] font-bold text-white tracking-wider shadow hover:-translate-y-1 transition duration-300 cursor-pointer" title="CliQ">CliQ</a>
+                    <!-- زر الفيزا -->
+                    <a href="https://wa.me/962770741142?text=مرحباً، أود الاستفسار عن الدفع عبر بطاقة فيزا (VISA)" target="_blank" class="bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 px-4 py-2 rounded-lg text-xs font-bold text-white tracking-wider shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 border border-blue-500 cursor-pointer">
+                        💳 الدفع بالفيزا
+                    </a>
+                    
+                    <!-- زر كليك -->
+                    <a href="https://wa.me/962770741142?text=مرحباً، أود الاستفسار عن الدفع عبر محفظة كليك (CliQ)" target="_blank" class="bg-gradient-to-r from-purple-800 to-purple-600 hover:from-purple-700 hover:to-purple-500 px-4 py-2 rounded-lg text-xs font-bold text-white tracking-wider shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center gap-2 border border-purple-400 cursor-pointer">
+                        ⚡ الدفع بـ CliQ
+                    </a>
                 </div>
             </div>
         </footer>
@@ -743,7 +752,7 @@
             };
 
             try {
-                // هام: ضع الرابط الخاص بك من Formspree هنا
+                // هام جداً: لا تنسَ تغيير هذا الرابط بالرابط الخاص بك من Formspree لاحقاً!
                 const formspreeURL = "https://formspree.io/f/ضع_معرف_الفورم_هنا"; 
 
                 const response = await fetch(formspreeURL, {
